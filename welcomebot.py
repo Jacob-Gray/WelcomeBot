@@ -134,7 +134,7 @@ def on_event(event, client):
             on_command(event, client)
     else:
         priv_users = shelve.open("privileged_users.txt")
-        if isinstance(event, ChatExchange.chatexchange.events.MessagePosted) and event.content.startswith("//start"):
+        if isinstance(event, ChatExchange.chatexchange.events.MessagePosted) and event.content.startswith(":start"):
             if (event.user.id == 121401 and host_id == 'stackexchange.com') or (event.user.id == 284141 and host_id == 'meta.stackexchange.com') or (event.user.id == 4087357 and host_id == 'stackoverflow.com') or (str(event.user.id) in priv_users[host_id + room_id]):
                 BotProperties.paused = False
                 event.message.reply("I am now resuming :)")
@@ -158,7 +158,7 @@ def on_command(message, client):
     print "Message Posted"
     message.content = chaterize_message(message.content)
 
-    if message.content.startswith("//image"):
+    if message.content.startswith(":image"):
         print "Is image request"
         if len(message.content.split()) == 1:
             message.message.reply("No search term given")
@@ -176,15 +176,15 @@ def on_command(message, client):
                     message.message.reply(image)
             t = Thread(target=perform_image_search)
             t.start()
-    elif message.content.startswith("//alive"):
+    elif message.content.startswith(":alive"):
         print "Is alive request"
         message.message.reply("Indeed :D")
 
-    elif message.content.startswith("//testenter"):
+    elif message.content.startswith(":testenter"):
         print "Is testenter request"
         room.send_message("@SkynetTestUser " + BotProperties.welcome_message)
 
-    elif message.content.startswith("//search"):
+    elif message.content.startswith(":search"):
         print "Is search request"
         if len(message.content.split()) == 1:
             message.message.reply("Can't search, no terms given")
@@ -216,11 +216,11 @@ def on_command(message, client):
             g = Thread(target=perform_google_search)
             g.start()
 
-    elif message.content.startswith("//info"):
+    elif message.content.startswith(":info"):
         print "Is info request"
         message.message.reply("Host ID: " + host_id + "\nRoom ID: " + room_id + "\nWelcome Message:\n" + BotProperties.welcome_message)
 
-    elif message.content.startswith("//editmsg"):
+    elif message.content.startswith(":editmsg"):
         print "Is message edit request"
         if (message.user.id == 121401 and host_id == 'stackexchange.com') or (message.user.id == 284141 and host_id == 'meta.stackexchange.com') or (message.user.id == 4087357 and host_id == 'stackoverflow.com') or (str(message.user.id) in priv_users[host_id + room_id]):
             if len(message.content.split()) == 1:
@@ -245,29 +245,29 @@ def on_command(message, client):
         else:
             message.message.reply("You are not authorized to edit the welcome message. Please contact michaelpri if it needs to be changed.")
 
-    elif message.content.startswith("//die"):
+    elif message.content.startswith(":die"):
         if (message.user.id == 121401 and host_id == 'stackexchange.com') or (message.user.id == 284141 and host_id == 'meta.stackexchange.com') or (message.user.id == 4087357 and host_id == 'stackoverflow.com') or (str(message.user.id) in priv_users[host_id + room_id]):
             message.message.reply("I'm dead :(")
             time.sleep(0.4)
             os._exit(6)
         else:
             message.message.reply("You are not authorized kill me!!! Muahaha!!!! Please contact michaelpri if I am acting up.")
-    elif message.content.startswith("//reset"):
+    elif message.content.startswith(":reset"):
         if (message.user.id == 121401 and host_id == 'stackexchange.com') or (message.user.id == 284141 and host_id == 'meta.stackexchange.com') or (message.user.id == 4087357 and host_id == 'stackoverflow.com') or (str(message.user.id) in priv_users[host_id + room_id]):
             message.message.reply("Resetting...")
             time.sleep(0.4)
             os._exit(5)
         else:
             message.message.reply("You are not authorized reset me. Please contatct michaelpri if I need resetting.")
-    elif message.content.startswith("//source"):
+    elif message.content.startswith(":source"):
         message.message.reply("My source code can be found on [GitHub](https://github.com/michaelpri10/WelcomeBot)")
-    elif message.content.startswith("//pull"):
+    elif message.content.startswith(":pull"):
         if (message.user.id == 121401 and host_id == 'stackexchange.com') or (message.user.id == 284141 and host_id == 'meta.stackexchange.com') or (message.user.id == 4087357 and host_id == 'stackoverflow.com') or (str(message.user.id) in priv_users[host_id + room_id]):
             os._exit(3)
         else:
             message.message.reply("You are not authorized to pull. Please contatct michaelpri if I need some pulling.")
 
-    elif message.content.startswith("//priv"):
+    elif message.content.startswith(":priv"):
         if (message.user.id == 121401 and host_id == 'stackexchange.com') or (message.user.id == 284141 and host_id == 'meta.stackexchange.com') or (message.user.id == 4087357 and host_id == 'stackoverflow.com') or (str(message.user.id) in priv_users[host_id + room_id]):
             if len(message.content.split()) == 2:
                 user_to_priv = message.content.split()[1]
@@ -282,7 +282,7 @@ def on_command(message, client):
                 message.message.reply("Invalid privilege giving")
         else:
             message.message.reply("You are not authorized to add privileged users :( Please contact michaelpri if someone needs privileges.")
-    elif message.content.startswith("//choose"):
+    elif message.content.startswith(":choose"):
         print "Is choose request"
         if len(message.content.split()) == 1:
             message.message.reply("No choices given")
@@ -292,7 +292,7 @@ def on_command(message, client):
                 message.message.reply("I choose " + random.choice(choices))
             else:
                 message.message.reply("I'm not sure what your options are")
-    elif message.content.startswith("//help"):
+    elif message.content.startswith(":help"):
         print "Is help request"
         message.message.reply("""My Commands
                                  - //image (search term)
@@ -313,7 +313,7 @@ def on_command(message, client):
                                      - //reset
                                      - //editmsg [new welcome message]
                                 """)
-    elif message.content.startswith("//weather"):
+    elif message.content.startswith(":weather"):
         print "Is weather request"
         if len(message.content.split()) == 1:
             message.message.reply("City and country/state not given")
@@ -335,7 +335,7 @@ def on_command(message, client):
                         message.message.reply("Couldn't find weather info for " + message.content)
             w = Thread(target=perform_weather_search)
             w.start()
-    elif message.content.startswith("//youtube"):
+    elif message.content.startswith(":youtube"):
         print "Is youtube request"
         if len(message.content.split()) == 1:
             message.message.reply("No search term given")
@@ -353,7 +353,7 @@ def on_command(message, client):
                     message.message.reply(video)
             v = Thread(target=perform_youtube_search)
             v.start()
-    elif message.content.startswith("//pause"):
+    elif message.content.startswith(":pause"):
         if (message.user.id == 121401 and host_id == 'stackexchange.com') or (message.user.id == 284141 and host_id == 'meta.stackexchange.com') or (message.user.id == 4087357 and host_id == 'stackoverflow.com') or (str(message.user.id) in priv_users[host_id + room_id]):
             BotProperties.paused = True
             message.message.reply("I am now paused :|")
